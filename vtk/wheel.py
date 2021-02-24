@@ -9,8 +9,8 @@ class CalcMesh:
         self.nodes = np.array([nodes_coords[0::3], nodes_coords[1::3], nodes_coords[2::3]])
 
         self.time = 0
-        omega = [0, 1, 0]
-        self.velocity = np.transpose(np.cross(np.transpose(self.nodes), omega))
+        self.angular_velocity = [0, 1, 0]
+        self.velocity = np.transpose(np.cross(np.transpose(self.nodes), self.angular_velocity))
 
         self.omega = np.ones(self.nodes.shape[1]) * 10
         self.k = 0.1
@@ -23,6 +23,7 @@ class CalcMesh:
     def move(self, tau):
         self.time += tau
         self.nodes += self.velocity * tau
+        self.velocity = np.transpose(np.cross(np.transpose(self.nodes), self.angular_velocity))
         self.wave = np.sin((self.omega * self.time) + self.nodes[0, :] * self.k)
 
     def snapshot(self, snap_number):
